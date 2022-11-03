@@ -28,7 +28,7 @@ export const loader = async ({ request, params }) => {
 
 export default function LandingPage() {
     const { results } = useLoaderData();
-    const [{
+    const [, , , {
         name,
         species,
         gender,
