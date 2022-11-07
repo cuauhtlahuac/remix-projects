@@ -13,7 +13,8 @@ datasource db {
 model MyProduct {
   id     String   @id @default(auto()) @map("_id") @db.ObjectId
   slug   String   @unique
-  title  String
+  name   String
   body   String
   images String[]
+  color  String
 }

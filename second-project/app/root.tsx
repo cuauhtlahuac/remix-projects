@@ -14,6 +14,15 @@ export const meta: MetaFunction = () => ({
   viewport: "width=device-width,initial-scale=1",
 });
 
+export function links() {
+  return [
+    {
+      rel: "stylesheet",
+      href: "https://cdnjs.cloudflare.com/ajax/libs/antd/4.24.1/antd.compact.min.css",
+    },
+  ];
+}
+
 export default function App() {
   return (
     <html lang="en">
