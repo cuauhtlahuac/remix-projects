@@ -1,60 +1,78 @@
-import { useLoaderData, useSubmit } from "@remix-run/react";
+import { useLoaderData, useNavigate, useSubmit } from "@remix-run/react";
 import { db } from "~/models/db.server";
 import { Pagination, Card, Typography } from 'antd';
+import { MyProduct } from "@prisma/client";
+import { LoaderFunction } from "@remix-run/node";
 
 const { Meta } = Card;
 const { Title } = Typography;
 
-const pageSize = 10;
+interface LoaderDataType {
+    products: MyProduct[];
+    total: number;
+    pageSize: number;
+    page: number;
+}
 
-export async function loader({ request }) {
+export const loader: LoaderFunction = async ({ request }) => {
     const url = new URL(request.url);
-    const page = url.searchParams.get("page");
-    const skip = (Number(page) * Number(pageSize)) - pageSize;
+    const page = Number(url.searchParams.get("page")) ?? 1;
+    const take = Number(url.searchParams.get("pageSize")) ?? 10;
+    const skip = page * take - take
+
     const total = await db.myProduct.count();
-    const product = await db.myProduct.findMany({
+    const products = await db.myProduct.findMany({
         skip,
-        take: pageSize,
+        take,
     });
-    return { product, total, page }
+
+    return { products, total, pageSize: take, page }
 }
 
 export default function ProductList() {
-    const submit = useSubmit();
-    const { product, total, page } = useLoaderData();
-    const onPageChange = (page: number) => {
-        submit({ page: `${page}` });
+    const { products, total, pageSize, page } = useLoaderData<LoaderDataType>();
+    const navigate = useNavigate()
+
+    const onPageChange = (page: number, pageSize: number) => {
+        navigate(`/product-list?page=${page}&pageSize=${pageSize}`)
     }
+
     return (
         <div style={{ padding: '20px' }}>
             <Title>Products list</Title>
-            <div style={{ display: "flex", flexDirection: 'row', flexWrap: 'wrap', gap: '2px', marginTop: '10px', marginBottom: '10px' }}>
-                {product.map(({
-                    id,
-                    body,
-                    images,
-                    name,
-                }) => (
-                    <Card
-                        key={id}
-                        hoverable
-                        style={{ width: 240 }}
-                        cover={<img alt="example" src={images[0]} />}
-                    >
-                        <Meta title={name} description={body} />
-                    </Card>))}
-            </div>
+            <ListOfProducts products={products} />
             <Pagination
-                defaultCurrent={1}
-                current={page}
-                pageSize={pageSize}
+                defaultCurrent={page}
                 defaultPageSize={pageSize}
                 total={total}
-                showTotal={() => `Total ${total} items`}
+                showTotal={() => `Total: ${total}`}
                 onChange={onPageChange}
-                showQuickJumper={false}
-                pageSizeOptions={['10']}
+                pageSizeOptions={['10', '30', '50', '100', '200']}
             />
         </div>
     );
 }
+
+const ListOfProducts = ({ products }: { products: MyProduct[] }) => (<div style={{
+    display: "flex",
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: '2px',
+    marginTop: '10px',
+    marginBottom: '10px'
+}}>
+    {products.map(({
+        id,
+        body,
+        images,
+        name,
+    }) => (
+        <Card
+            key={id}
+            hoverable
+            style={{ width: 240 }}
+            cover={<img alt="example" src={images[0]} />}
+        >
+            <Meta title={name} description={body} />
+        </Card>))}
+</div>)

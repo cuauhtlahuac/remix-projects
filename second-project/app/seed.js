@@ -19,18 +19,10 @@ const getProduct = () => {
 }
 
 const seed = () => {
-    return [...Array(500).keys()].map(getProduct);
+    return [...Array(10).keys()].map(getProduct);
 }
 const seeded = seed();
 
 const saveInDB = async () => await prisma.myProduct.createMany({ data: seeded });
 
-const asyncHandler = async () => {
-    try {
-        await saveInDB();
-    } catch (error) {
-        throw new Error(error)
-    }
-}
-
-asyncHandler().then(() => console.log("DONE!")).catch((error) => console.log("ERROR", error));
+saveInDB().then(() => console.info("DONE!")).catch((error) => console.error("ERROR", error));
