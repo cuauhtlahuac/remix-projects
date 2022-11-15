@@ -1,4 +1,5 @@
 import type { MetaFunction } from "@remix-run/node";
+import styles from "./styles/app.css"
 import {
   Links,
   LiveReload,
@@ -16,6 +17,9 @@ export const meta: MetaFunction = () => ({
 
 export function links() {
   return [
+    {
+      rel: "stylesheet", href: styles
+    },
     {
       rel: "stylesheet",
       href: "https://cdnjs.cloudflare.com/ajax/libs/antd/4.24.1/antd.compact.min.css",
