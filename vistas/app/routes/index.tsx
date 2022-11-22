@@ -11,34 +11,29 @@ export const loader: LoaderFunction = () => {
 
 export default function Index() {
   const data = useLoaderData();
-  const [tabData, setTabData] = useState(data[0])
-  const handleOnSelected = (selected: any) => {
-    setTabData(selected)
-  }
+  // no prop-drilling jamás
   return (
-    <div>
-      <Tab.Group data={data}>
+    <div className='w-4/4 p-6'>
+      <Tab.Group defaultIndex={2}>
         <Tab.List>
-          {data.map(({ header }:
-            {
-              header: string,
-            }, index: number) => (
-            <Tab
-              index={index}
-              key={header}
-              onPress={handleOnSelected}
-            >
+          {data.map((
+            { header, id }: { header: string, id: string, },
+            index: number) => (
+            <Tab key={id} index={index}>
               {header}
             </Tab>
           ))
           }
         </Tab.List>
         <Tab.Panels>
-          {tabData.body.map(({ title, detail }: { [key: string]: string }) => (
-            <Tab.Panel>
-              <h3>{title}</h3>
-              <p>{detail}</p>
-            </Tab.Panel>))}
+          {(index: number) => data[index].body.map(
+            ({ title = 'title', detail = 'detail' }) => (
+              <Tab.Panel key={title + index}>
+                <h3 className="text-base font-bold font-medium text-black-900 mb-1">{title}</h3>
+                <p className="text-sm font-light text-gray-700 mb-2">{detail}</p>
+              </Tab.Panel>
+            )
+          )}
         </Tab.Panels>
       </Tab.Group>
     </div>

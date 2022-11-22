@@ -14,6 +14,7 @@ const createPanel = () => {
 const createTab = () => {
     const header = faker.lorem.word({ length: { min: 3, max: 16 } });
     return {
+        id: faker.database.mongodbObjectId(),
         header,
         body: new Array(2).fill().map(() => createPanel()),
     }
