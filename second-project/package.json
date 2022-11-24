@@ -15,7 +15,8 @@
     "antd": "^4.24.1",
     "isbot": "^3.5.4",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "zod": "^3.19.1"
   },
   "devDependencies": {
     "@faker-js/faker": "^7.6.0",
