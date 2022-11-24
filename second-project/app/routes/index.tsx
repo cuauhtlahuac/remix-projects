@@ -16,6 +16,9 @@ export default function Index() {
       <Content style={{ padding: '50px' }}>
         <Link to={'/podcast'} style={{ fontSize: '2rem' }}>Go to podcast view</Link >
       </Content>
+      <Content style={{ padding: '50px' }}>
+        <Link to={'/crud'} style={{ fontSize: '2rem' }}>Go to CRUD view</Link >
+      </Content>
     </Layout >
   );
 }
